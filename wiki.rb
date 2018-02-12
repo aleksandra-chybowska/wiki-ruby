@@ -13,6 +13,7 @@ end
 
 $myinfo = "Aleksandra Chybowska"
 @info = ""
+$credentials = ['','']
 
 def readFile(filename)
 	info = ""
@@ -28,31 +29,30 @@ end
 
 
 def authorized?
-            if $credentials != nil
-            @Userz = User.where(:username => $credentials[0]).to_a.first
-                if @Userz
-                        if @Userz.edit == true
-                            return true
-                        else
-                            return false
-                        end
+    if $credentials != nil
+    @Userz = User.where(:username => $credentials[0]).to_a.first
+        if @Userz
+                if @Userz.edit == true
+                    return true
                 else
-                 return false
+                    return false
                 end
-            end
+        else
+         return false
+        end
+    end
 end
 
 def protected!
     if authorized?
         return
     end
-    redirect'/denied'
+    redirect '/denied'
 end
     
 def reverse (string)
      string.each_char.to_a.reverse.join
 end
-
 
 
 get '/' do
@@ -84,8 +84,6 @@ post '/register' do
    	redirect "/"
 end
 
-
-
 get '/logout' do
     $credentials = ['','']
     redirect '/'
@@ -98,25 +96,20 @@ end
 
 post '/login' do
     $credentials = [params[:username],params[:password]]
-        @Users = User.where(:username => $credentials[0]).to_a.first
-            if @Users
-                if @Users.password == $credentials[1]
-                        redirect '/'
-                    else
-                        $credentials = ['','']
-                        redirect '/wrongaccount'
+    @Users = User.where(:username => $credentials[0]).to_a.first
+    
+    if @Users && @Users.password == $credentials[1]
+        redirect '/'
+    else
+        $credentials = ['','']
+        redirect '/wrongaccount'
     end
-            else
-                $credentials = ['','']
-                redirect '/wrongaccount'
-    end
-
-    end
+end
     
     
 get '/wrongaccount' do
-        erb :wrongaccount
-    end
+    erb :wrongaccount
+end
 
 
 

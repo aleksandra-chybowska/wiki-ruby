@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html>
-	<head>
-	    <meta charset="UTF-8">
-	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta name="description" content="This is my new Wiki app" />
-		<meta name="keywords" content="wiki, test app, blog"/>
-		<link rel="stylesheet" href="style.css" type="text/css" />
-	    <title>Growing Cymbidium Orchids</title>
-	    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-	</head>
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="This is my new Wiki app" />
+    <meta name="keywords" content="wiki, test app, blog"/>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+      <title>Growing Cymbidium Orchids</title>
+      <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  </head>
 
-	<section class="title">
-		<h1 class="pt-4 pb-4 mb-0">Growing Cymbidium Orchids</h1>
-	</section>
+  <section class="title">
+    <h1 class="pt-4 pb-4 mb-0">Growing Cymbidium Orchids DUPA</h1>
+  </section>
 
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
         <a class="navbar-brand" href="/">Wiki's Home</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,41 +25,32 @@
             <li class="nav-item">
               <a class="nav-link" href="/about">About</a>
             </li>
-
-        <% if $credentials %>
-              <% if $credentials[0] != [''] %>
-      
-	                  <li class="nav-item">
-	                      <a class="nav-link" href="/user/<%= $credentials[0] %>"><b><%= $credentials[0] %></b> </a>
-	                       </li>
-	                    <% if $credentials[0] == "Admin" %>
-	                      <li class="nav-item">
-	                          <a class="nav-link" href="/admincontrols">Control</a>
-	                        </li>
-	                      <li class="nav-item">
-		                      <a class="nav-link" href="/edit">Edit</a>
-                            </li>
-		        	         <% else %>
-		        	      <li class="nav-item">
-		                   <a class="nav-link" href="/edit">Edit</a>
-		        	      </li>
-		        	      
-	                 <% end %> 
-	           <li class="nav-item">
-	              <a class="nav-link" href="/logout">Logout</a>
-	            </li>
-	            
-	            <% else %>
+            <% if $credentials && $credentials[0] == 'Admin' %>
               <li class="nav-item">
-	             <a class="nav-link" href="/login">Login</a>
-	           </li>
-	         
-	           <li class="nav-item">
-	             <a class="nav-link" href="/register">Register</a>
-	           </li>
-	       	         
-	            <% end %>  
-	           <% end %>
+               <a class="nav-link" href="/edit">Edit</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/admincontrols">Control</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/archive">Archive</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/users">Users</a>
+              </li>
+            <% end %>
+            <% if $credentials && $credentials[0].to_s.empty? %>
+              <li class="nav-item">
+                <a class="nav-link" href="/register">Register</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+              </li>
+            <% else %>
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>            
+            <% end %>
           </ul>
         </div>
       </div>
@@ -68,7 +59,7 @@
     <!-- Page Content -->
     <div class="container">
       <div class="row">
-      	<!-- Sidebar Widgets Column -->
+        <!-- Sidebar Widgets Column -->
         <div class="col-sm-4">
           <!-- Side Widget -->
           <div class="card my-4">
@@ -82,9 +73,9 @@
 
         <!-- Post Content Column -->
         <div class="col-sm-8">
-    		<div class="view_content">
-        		<%= yield %>
-        	</div>
+        <div class="view_content">
+            <%= yield %>
+          </div>
         </div>
       </div>
       <!-- /.row -->
