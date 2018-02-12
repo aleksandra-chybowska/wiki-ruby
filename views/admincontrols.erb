@@ -1,26 +1,36 @@
-<h2>Admin controls page</h2>
+<h2>Users</h2>
 
-<p><b>User list</b></p><br>
-
-<p>Username - DateJoined - Edit?</p><br>
-
-<% @list2.each do |liste| %>
-
- <article>
- <p>
- <%= liste.username %> - <%= liste.created_at %> - <%= liste.edit %>
- 
-<% if liste.username != "Admin" %>
-
-<form action="/user/<%= liste.username %>" method="post" id="edit">
-<input type="hidden" name="_method" value="put">
-<input type="checkbox" name="edit" <%= "checked" if liste.edit %>>
- <input type="submit" value="Allow Edit?">
-<% end %>
-</form>
-<% if liste.username != "Admin" %>
- <a href="/user/delete/<%= liste.username %>">Delete User?</a>
- <% end %>
- </p>
- </article>
-<% end %> 
+<table id="datatable" class="table">
+  <thead>
+    <tr>
+      <th scope="col">Username</th>
+      <th scope="col">Joined</th>
+      <th scope="col">Edit?</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+		<% @list2.each do |row| %>
+	    <tr>
+	      <th scope="row"><%= row.username %></th>
+	      <td><%= row.created_at %></td>
+	      <td>
+	      	<% if row.username != "Admin" %>
+						<form action="/user/<%= row.username %>" method="post" id="edit">
+							<input type="hidden" name="_method" value="put">
+							<input type="checkbox" name="edit" <%= "checked" if row.edit %>>
+						 	<input type="submit" value="Allow Edit?">
+						</form>
+					<% else %>
+						<input type="checkbox" name="edit" disabled="disabled" <%= "checked" if row.edit %>> 
+					<% end %>
+				</td>
+			  <td>
+					<% if row.username != "Admin" %>
+					 	<a href="/user/delete/<%= row.username %>">Delete User?</a>
+					 <% end %>		  	
+			  </td>
+	    </tr>
+    <% end %>
+  </tbody>
+</table>

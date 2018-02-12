@@ -5,13 +5,14 @@
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="This is my new Wiki app" />
     <meta name="keywords" content="wiki, test app, blog"/>
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css" type="text/css" />
-      <title>Growing Cymbidium Orchids</title>
-      <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+      <title>Growing Cymbidium Orchids</title> 
   </head>
 
   <section class="title">
-    <h1 class="pt-4 pb-4 mb-0">Growing Cymbidium Orchids DUPA</h1>
+    <h1 class="pt-4 pb-4 mb-0">Growing Cymbidium Orchids</h1>
   </section>
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -25,18 +26,17 @@
             <li class="nav-item">
               <a class="nav-link" href="/about">About</a>
             </li>
+            <% if $credentials && !$credentials[0].to_s.empty? %>
+              <li class="nav-item">
+                <a class="nav-link" href="/edit">Edit</a>
+              </li>
+            <% end %>
             <% if $credentials && $credentials[0] == 'Admin' %>
-              <li class="nav-item">
-               <a class="nav-link" href="/edit">Edit</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/admincontrols">Control</a>
-              </li>
               <li class="nav-item">
                 <a class="nav-link" href="/archive">Archive</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="/users">Users</a>
+                <a class="nav-link" href="/admincontrols">Users</a>
               </li>
             <% end %>
             <% if $credentials && $credentials[0].to_s.empty? %>
@@ -92,7 +92,6 @@
     <!-- Bootstrap core JavaScript -->
     <script src="jquery/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
-
   </body>
 
 </html>

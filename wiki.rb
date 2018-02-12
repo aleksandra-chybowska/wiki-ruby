@@ -111,10 +111,8 @@ get '/wrongaccount' do
     erb :wrongaccount
 end
 
-
-
 get '/edit' do
-     protected!
+    protected!
     info =""
     file=File.open("wiki.txt")
     file.each do |line|
@@ -145,6 +143,7 @@ get '/denied' do
     end
 
 put '/user/:uzer' do
+    protected!
     n = User.where(:username => params[:uzer]).to_a.first
     n.edit = params[:edit] ? 1 : 0
     n.save
@@ -152,16 +151,15 @@ put '/user/:uzer' do
     end
 
 get '/user/delete/:uzer' do
+    protected!
     n = User.where(:username => params[:uzer]).to_a.first
     if n.username == "Admin"
         erb :denied
     else
         n.destroy
-        # @list2 = User.all.sort_by { |u| [u.id] }
-        # erb :admincontrols
         redirect '/admincontrols'
     end
-    end
+  end
 
     
 get '/reverse' do
