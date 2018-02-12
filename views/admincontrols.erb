@@ -1,18 +1,24 @@
-<h2>Users</h2>
+<h2>Admin Control</h2>
 
+<div class="row">
+	<div class="col-md-12 text-center">Users: <a href='/register'>Add new user</a></div>
+</div>
+<br>
 <table id="datatable" class="table">
   <thead>
     <tr>
       <th scope="col">Username</th>
+      <th scope="col">Password</th>
       <th scope="col">Joined</th>
-      <th scope="col">Edit?</th>
-      <th scope="col">Action</th>
+      <th scope="col">Edit</th>
+      <th scope="col">Delete</th>
     </tr>
   </thead>
   <tbody>
 		<% @list2.each do |row| %>
 	    <tr>
-	      <th scope="row"><%= row.username %></th>
+	      <td><%= row.username %></td>
+	      <td><%= row.password %></td>
 	      <td><%= row.created_at %></td>
 	      <td>
 	      	<% if row.username != "Admin" %>
