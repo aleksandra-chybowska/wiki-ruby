@@ -1,0 +1,7 @@
+<h2>Edit article</h2>
+<form  class="mb-4" action="/edit" method="post" id="edit">   
+    <textarea style="width: 100%; min-height: 300px" name="message"><%= @info %></textarea>  
+    <input class="btn-info btn mt-2" type="submit" value="Update">   
+    <input type="hidden" name="_method" value="put" />
+	<a class="mt-2 btn-info btn float-right" href="../reset">Reset</a>
+</form>   
