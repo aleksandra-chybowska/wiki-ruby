@@ -27,6 +27,13 @@ def readFile(filename)
   return info
 end
 
+def updateLog(username)
+  date = Time.now.strftime("%d/%m/%Y %H:%M")
+  info = "#{date}, #{username}: Wiki content updated"
+  file = File.open("log.txt", "a")
+  file.puts info
+  file.close
+end
 
 def authorized?
   if $credentials != nil
@@ -60,7 +67,6 @@ end
 def reverse (string)
  string.each_char.to_a.reverse.join
 end
-
 
 get '/' do
   @info  = readFile("wiki.txt").chomp
@@ -133,11 +139,14 @@ end
 
 
 put '/edit' do
+  protected!
   info = "#{params[:message]}"
   @info = info
   file = File.open("wiki.txt", "w")
   file.puts @info
   file.close
+
+  updateLog($credentials[0])
   redirect '/'
 end
 
