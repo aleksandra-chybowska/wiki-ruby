@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'sinatra/activerecord'
+require 'fileutils'
 
 ActiveRecord::Base.establish_connection(
   :adapter => 'sqlite3',
@@ -28,11 +29,23 @@ def readFile(filename)
 end
 
 def updateLog(username)
-  date = Time.now.strftime("%d/%m/%Y %H:%M")
-  info = "#{date}, #{username}: Wiki content updated"
+  date = Time.now.strftime("%d-%m-%Y--%H:%M")
+  filenamee="#{date}-#{username}"
+  info = "#{date}, #{username}: Wiki content updated  ,Link to file:/showlogbackup/#{filenamee}.txt"
   file = File.open("log.txt", "a")
   file.puts info
   file.close
+end
+
+def backupz(username)
+    date = Time.now.strftime("%d-%m-%Y--%H:%M")
+    name="#{date}-#{username}"
+    filname = "/home/ec2-user/environment/wiki-ruby/logbackup/#{name}.txt"
+    File.open('wiki.txt', 'rb') do |input|
+      File.open(filname,'wb') do |output|
+        IO.copy_stream(input,output)
+      end
+end
 end
 
 def authorized?
@@ -46,8 +59,8 @@ def authorized?
       end
     else
      return false
-   end
- end
+    end
+  end
 end
 
 def protected!
@@ -138,6 +151,7 @@ get '/edit' do
 end
 
 
+
 put '/edit' do
   protected!
   info = "#{params[:message]}"
@@ -147,7 +161,21 @@ put '/edit' do
   file.close
 
   updateLog($credentials[0])
+  backupz($credentials[0])
   redirect '/'
+end
+
+get  '/archive' do
+  protected!
+  info =""
+  file=File.open("wiki.txt")
+  file.each do |line|
+    info = info + line
+  end
+
+  file.close
+  @info=info
+  erb :edit
 end
 
 get '/admincontrols' do
@@ -179,6 +207,17 @@ get '/user/delete/:uzer' do
   end
 end
 
+get '/showlogbackup/:logzbackup' do
+    protected!
+    info =""
+    file=File.open("/home/ec2-user/environment/wiki-ruby/logbackup/#{logzbackup}.txt")
+    file.each do |line|
+        info = info + line
+    end
+    file.close
+    @info=info
+    erb :edit
+end
 
 get '/reverse' do
   $myinfo = reverse($myinfo)
