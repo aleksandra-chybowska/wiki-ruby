@@ -18,14 +18,14 @@
 	    <tr>
 	      <td><%= row %></td>
 	      <td>
-						<form action="/resettoversion/<%= row %>" method="post" id="edit">
-							<input type="hidden" name="_method" value="put">
+						<form action="/resettoversion" method="post" id="edit">
+							<input type="hidden" name="filename" value="<%= row %>">
 						 	<input class="mt-2 btn-info btn float-right" type="submit" value="Reset to this version?">
 						</form>
 				</td>
 			   <td>
-						<form action="/deleteversion/<%= row %>" method="post" id="edit">
-							<input type="hidden" name="_method" value="put">
+						<form action="/deleteversion" method="post" id="edit">
+							<input type="hidden" name="filename" value="<%= row %>">
 						 	<input class="mt-2 btn-info btn float-right" type="submit" value="Delete this version?">
 						</form>
 				</td>

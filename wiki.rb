@@ -12,7 +12,6 @@ class User < ActiveRecord::Base
   validates :password, presence: true
 end
 
-$myinfo = "Aleksandra Chybowska"
 @info = ""
 $credentials = ['','']
 
@@ -37,15 +36,22 @@ def updateLog(username,type)
   file.close
 end
 
+def copyFileContents(inputFile, outputFile)
+  inputFileHandler = File.open(inputFile, 'r')
+  outputFileHandler = File.open(outputFile, 'w')
+
+  IO.copy_stream(inputFileHandler, outputFileHandler)
+
+  inputFileHandler.close
+  outputFileHandler.close
+end
+
 def backupz(username)
     date = Time.now.strftime("%d-%m-%Y--%H:%M")
     name="#{date}-#{username}"
-    filname="/home/ec2-user/environment/logbackup/#{name}.txt"
-    File.open('wiki.txt', 'rb') do |input|
-      File.open(File.absolute_path(filname),'w') do |output|
-        IO.copy_stream(input,output)
-      end
-end
+    filname="backups/#{name}.txt"
+
+    copyFileContents('wiki.txt', filname)
 end
 
 def authorized?
@@ -77,9 +83,6 @@ def protected_admin!
   redirect '/denied'
 end
 
-def reverse (string)
- string.each_char.to_a.reverse.join
-end
 
 get '/' do
   @info  = readFile("wiki.txt").chomp
@@ -150,8 +153,6 @@ get '/edit' do
   erb :edit
 end
 
-
-
 put '/edit' do
   protected!
   info = "#{params[:message]}"
@@ -165,9 +166,9 @@ put '/edit' do
   redirect '/'
 end
 
-get  '/archive' do
-  dirr="/home/ec2-user/environment/logbackup"
-  @list3=Dir.entries(dirr)
+get '/archive' do
+  dirr = "backups"
+  @list3 = Dir.entries(dirr) - %w[. ..]
   erb :archive
 end
 
@@ -203,7 +204,7 @@ end
 get '/showlogbackup/:logzbackup' do
     protected!
     info =""
-    filname="/home/ec2-user/environment/logbackup/:logzbackup"
+    filname="backups/#{params[:logzbackup]}.txt"
     file=File.open(File.absolute_path(filname),'r')
     file.each do |line|
         info = info + line
@@ -213,39 +214,26 @@ get '/showlogbackup/:logzbackup' do
     erb :edit
 end
 
-get '/reverse' do
-  $myinfo = reverse($myinfo)
-  redirect '/'
-end
-
-get '/resettoversion/:versionofwiki' do
+post '/resettoversion' do
   protected!
-  versionname=params[:versionofwiki]
-  filname="/home/ec2-user/environment/logbackup/#{versionname}"
-  File.open(File.absolute_path(filname),'rb') do |input|
-    File.open('wiki.txt', 'wb') do |output|
-      IO.copy_stream(input,output)
-    end
-  end
+  versionname=params[:filename]
+  filename="backups/#{versionname}"
+  copyFileContents(filename, 'wiki.txt')
   redirect '/archive'
 end
   
 get '/resetwiki' do
   protected!
-  File.open('original.txt', 'rb') do |input|
-    File.open('wiki.txt','wb') do |output|
-      IO.copy_stream(input,output)
-    end
-  end
+  copyFileContents('original.txt', 'wiki.txt')
   updateLog($credentials[0],"Reset")
   redirect '/edit'
 end
 
-get '/deleteversion/:versiontodelete' do
+post '/deleteversion' do
   protected!
-  versionname=params[:versiontodelete]
-  filname="/home/ec2-user/environment/logbackup/#{versionname}"
-  File.delete(File.absolute_path(filname))
+  versionname=params[:filename]
+  filename="backups/#{versionname}"
+  File.delete(filename)
   redirect '/archive'
 end
 
