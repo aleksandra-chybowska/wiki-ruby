@@ -166,16 +166,9 @@ put '/edit' do
 end
 
 get  '/archive' do
-  protected!
-  info =""
-  file=File.open("wiki.txt")
-  file.each do |line|
-    info = info + line
-  end
-
-  file.close
-  @info=info
-  erb :edit
+  dirr="/home/ec2-user/environment/logbackup"
+  @list3=Dir.entries(dirr)
+  erb :archive
 end
 
 get '/admincontrols' do
@@ -225,6 +218,18 @@ get '/reverse' do
   redirect '/'
 end
 
+get '/resettoversion/:versionofwiki' do
+  protected!
+  versionname=params[:versionofwiki]
+  filname="/home/ec2-user/environment/logbackup/#{versionname}"
+  File.open(File.absolute_path(filname),'rb') do |input|
+    File.open('wiki.txt', 'wb') do |output|
+      IO.copy_stream(input,output)
+    end
+  end
+  redirect '/archive'
+end
+  
 get '/resetwiki' do
   protected!
   File.open('original.txt', 'rb') do |input|
@@ -233,10 +238,17 @@ get '/resetwiki' do
     end
   end
   updateLog($credentials[0],"Reset")
-  redirect '/'
+  redirect '/edit'
 end
-      
-      
+
+get '/deleteversion/:versiontodelete' do
+  protected!
+  versionname=params[:versiontodelete]
+  filname="/home/ec2-user/environment/logbackup/#{versionname}"
+  File.delete(File.absolute_path(filname))
+  redirect '/archive'
+end
+
 not_found do 
   status 404
   erb :notfound
