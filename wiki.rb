@@ -28,10 +28,10 @@ def readFile(filename)
   return info
 end
 
-def updateLog(username)
+def updateLog(username,type)
   date = Time.now.strftime("%d-%m-%Y--%H:%M")
   filenamee="#{date}-#{username}"
-  info = "#{date}, #{username}: Wiki content updated  ,Link to file:/showlogbackup/#{filenamee}.txt"
+  info = "#{date}, #{username}: Wiki content updated,#{type},Link to file:/showlogbackup/#{filenamee}.txt"
   file = File.open("log.txt", "a")
   file.puts info
   file.close
@@ -40,9 +40,9 @@ end
 def backupz(username)
     date = Time.now.strftime("%d-%m-%Y--%H:%M")
     name="#{date}-#{username}"
-    filname = "/home/ec2-user/environment/wiki-ruby/logbackup/#{name}.txt"
+    filname="/home/ec2-user/environment/logbackup/#{name}.txt"
     File.open('wiki.txt', 'rb') do |input|
-      File.open(filname,'wb') do |output|
+      File.open(File.absolute_path(filname),'w') do |output|
         IO.copy_stream(input,output)
       end
 end
@@ -160,7 +160,7 @@ put '/edit' do
   file.puts @info
   file.close
 
-  updateLog($credentials[0])
+  updateLog($credentials[0],"Amended")
   backupz($credentials[0])
   redirect '/'
 end
@@ -210,7 +210,8 @@ end
 get '/showlogbackup/:logzbackup' do
     protected!
     info =""
-    file=File.open("/home/ec2-user/environment/wiki-ruby/logbackup/#{logzbackup}.txt")
+    filname="/home/ec2-user/environment/logbackup/:logzbackup"
+    file=File.open(File.absolute_path(filname),'r')
     file.each do |line|
         info = info + line
     end
@@ -224,6 +225,18 @@ get '/reverse' do
   redirect '/'
 end
 
+get '/resetwiki' do
+  protected!
+  File.open('original.txt', 'rb') do |input|
+    File.open('wiki.txt','wb') do |output|
+      IO.copy_stream(input,output)
+    end
+  end
+  updateLog($credentials[0],"Reset")
+  redirect '/'
+end
+      
+      
 not_found do 
   status 404
   erb :notfound
