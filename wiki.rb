@@ -14,6 +14,7 @@ end
 
 @info = ""
 $credentials = ['','']
+$backgroundcolor=
 
 def readFile(filename)
   info = ""
@@ -234,6 +235,28 @@ get '/adminbackup' do
   protected!
   backupz($credentials[0])
   redirect '/admincontrols'
+end
+get '/bluebackground' do
+  $backgroundcolor="007996"
+  redirect '/'
+end
+get '/greenbackground' do
+  $backgroundcolor="668d3c"
+  redirect '/'
+end
+
+get '/orangebackground' do
+  $backgroundcolor="ff8642"
+  redirect '/'
+end
+
+get '/redbackground' do
+  $backgroundcolor="c0362c"
+  redirect '/'
+end
+get '/defbackground' do
+  $backgroundcolor="17A2B8"
+  redirect '/'
 end
 
 not_found do 
