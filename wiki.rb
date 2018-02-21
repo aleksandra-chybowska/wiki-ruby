@@ -85,6 +85,7 @@ end
 
 
 get '/' do
+  @info  = readFile("wiki.txt").chomp
   erb :home
 end
 
