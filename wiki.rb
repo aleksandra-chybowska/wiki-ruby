@@ -166,15 +166,11 @@ put '/edit' do
   redirect '/'
 end
 
-get '/archive' do
-  dirr = "backups"
-  @list3 = Dir.entries(dirr) - %w[. ..]
-  erb :archive
-end
-
 get '/admincontrols' do
   protected_admin!
+  dirr = "backups"
   @list2 = User.all.sort_by { |u| [u.id] }
+  @list3 = Dir.entries(dirr) - %w[. ..]
   erb :admincontrols
 end
 
@@ -219,14 +215,14 @@ post '/resettoversion' do
   versionname=params[:filename]
   filename="backups/#{versionname}"
   copyFileContents(filename, 'wiki.txt')
-  redirect '/archive'
+  redirect '/admincontrols'
 end
   
 get '/resetwiki' do
   protected!
   copyFileContents('original.txt', 'wiki.txt')
   updateLog($credentials[0],"Reset")
-  redirect '/edit'
+  redirect '/admincontrols'
 end
 
 post '/deleteversion' do
@@ -234,7 +230,13 @@ post '/deleteversion' do
   versionname=params[:filename]
   filename="backups/#{versionname}"
   File.delete(filename)
-  redirect '/archive'
+  redirect '/admincontrols'
+end
+
+get '/adminbackup' do
+  protected!
+  backupz($credentials[0])
+  redirect '/admincontrols'
 end
 
 not_found do 
