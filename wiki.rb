@@ -85,10 +85,6 @@ end
 
 
 get '/' do
-  @info  = readFile("wiki.txt").chomp
-  len = @info.length 
-  @words = len.to_s
-
   erb :home
 end
 

@@ -59,11 +59,16 @@
         <!-- Sidebar Widgets Column -->
         <div class="col-sm-4">
           <!-- Side Widget -->
+<% filename='wiki.txt'
+  wordcount= %x{wc -w #{filename}}.split.first.to_i
+  charactercount=%x{wc -c #{filename}}.split.first.to_i 
+  linecount=%x{wc -l #{filename}}.split.first.to_i  %>
           <div class="card my-4">
             <h5 class="card-header">Word Count Widget</h5>
             <div class="card-body">
-              <strong>Word Count:</strong> <%= @words %> <br>
-              <strong>Character count:</strong> <%= @words %> <br>
+              <strong>Wiki page Word Count:</strong> <%= wordcount %> <br>
+              <strong>Wiki page Character count:</strong> <%= charactercount %> <br>
+              <strong>Wiki page Line count:</strong> <%= linecount %> <br>
             </div>
           </div>
         </div>
