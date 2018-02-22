@@ -15,9 +15,9 @@
 	display:inline-block;
 	height:20px;
 	width:20px;
-	
-}</style>
-  <section class="title" style="background-color:#<%= $backgroundcolor %>;">
+}
+</style>
+<section class="title" style="background-color:#<%= $backgroundcolor %>;">
     <h1 class="pt-4 pb-4 mb-0">Growing Cymbidium Orchids</h1>
 </section>
 
@@ -39,7 +39,10 @@
             <% end %>
             <% if $credentials && $credentials[0] == 'Admin' %>
               <li class="nav-item">
-                <a class="nav-link" href="/admincontrols">Admin Controls</a>
+                <a class="nav-link" href="/archive">Archive</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/admincontrols">Users</a>
               </li>
             <% end %>
             <% if $credentials && $credentials[0].to_s.empty? %>
@@ -65,10 +68,10 @@
         <!-- Sidebar Widgets Column -->
         <div class="col-sm-4">
           <!-- Side Widget -->
-<% filename='wiki.txt'
-  wordcount= %x{wc -w #{filename}}.split.first.to_i
-  charactercount=%x{wc -c #{filename}}.split.first.to_i 
-  linecount=%x{wc -l #{filename}}.split.first.to_i  %>
+          <% filename='wiki.txt'
+          wordcount= %x{wc -w #{filename}}.split.first.to_i
+          charactercount=%x{wc -c #{filename}}.split.first.to_i 
+          linecount=%x{wc -l #{filename}}.split.first.to_i  %>
           <div class="card my-4">
             <h5 class="card-header">Word Count Widget</h5>
             <div class="card-body">
@@ -92,17 +95,15 @@
 
     <footer class="py-5 bg-dark">
       <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; 2018: Nassr Alemrani, Aleksandra Siudyka</p>
-<h7 style= "color:#ffffff;">Change Theme Color:
-<a href="defbackground"><span class="badge btn-danger btn-group themecolorbutton" style="background-color:#17A2B8;"> </span></a>
-<a href="bluebackground" ><span class="badge btn-primary btn-group themecolorbutton" > </span></a>
-<a href="greenbackground"><span class="badge btn-success btn-group themecolorbutton"> </span></a>
-<a href="orangebackground"><span class="badge btn-warning btn-group themecolorbutton"> </span></a>
-<a href="redbackground"><span class="badge btn-danger btn-group themecolorbutton"> </span></a>
-
-</h7>
-
-</div>
+        <p class="m-0 text-center text-white">Copyright &copy; 2018: Nassr Alemrani (id: ?), Aleksandra Siudyka (id: 51659859)</p>
+          <p class="m-0 text-center text-white">Change Theme Color:
+            <a href="defbackground"><span class="badge btn-danger btn-group themecolorbutton" style="background-color:#17A2B8;"> </span></a>
+            <a href="bluebackground" ><span class="badge btn-primary btn-group themecolorbutton" > </span></a>
+            <a href="greenbackground"><span class="badge btn-success btn-group themecolorbutton"> </span></a>
+            <a href="orangebackground"><span class="badge btn-warning btn-group themecolorbutton"> </span></a>
+            <a href="redbackground"><span class="badge btn-danger btn-group themecolorbutton"> </span></a>
+         </p>
+       </div>
       <!-- /.container -->
     </footer>
 

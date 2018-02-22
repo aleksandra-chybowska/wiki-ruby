@@ -14,7 +14,7 @@ end
 
 @info = ""
 $credentials = ['','']
-$backgroundcolor=
+$backgroundcolor=""
 
 def readFile(filename)
   info = ""
@@ -22,6 +22,18 @@ def readFile(filename)
   
   file.each do |line|
     info = info + line
+  end
+
+  file.close
+  return info
+end
+
+def readFileLog(filename)
+  info = ""
+  file = File.open(filename)
+  
+  file.each do |line|
+    info = info + line + '<br>'
   end
 
   file.close
@@ -166,10 +178,20 @@ end
 
 get '/admincontrols' do
   protected_admin!
-  dirr = "backups"
   @list2 = User.all.sort_by { |u| [u.id] }
-  @list3 = Dir.entries(dirr) - %w[. ..]
   erb :admincontrols
+end
+
+get '/archive' do
+  protected_admin!
+  dirr = "backups"
+  @list3 = Dir.entries(dirr) - %w[. ..]
+  erb :archive
+end
+
+get '/showlog' do
+  @log  = readFileLog("log.txt").chomp  
+  erb :showlog
 end
 
 get '/denied' do
@@ -198,14 +220,14 @@ end
 get '/showlogbackup/:logzbackup' do
     protected!
     info =""
-    filname="backups/#{params[:logzbackup]}.txt"
+    filname="backups/#{params[:logzbackup]}"
     file=File.open(File.absolute_path(filname),'r')
     file.each do |line|
         info = info + line
     end
     file.close
-    @info=info
-    erb :edit
+    @log=info
+    erb :backup
 end
 
 post '/resettoversion' do
@@ -220,7 +242,7 @@ get '/resetwiki' do
   protected!
   copyFileContents('original.txt', 'wiki.txt')
   updateLog($credentials[0],"Reset")
-  redirect '/admincontrols'
+  redirect '/archive'
 end
 
 post '/deleteversion' do
