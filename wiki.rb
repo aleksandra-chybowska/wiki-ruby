@@ -16,6 +16,7 @@ end
 $credentials = ['','']
 $backgroundcolor=""
 
+#universal function to read files
 def readFile(filename)
   info = ""
   file = File.open(filename)
@@ -28,6 +29,7 @@ def readFile(filename)
   return info
 end
 
+#readFile that addes <br> at the end of each line
 def readFileLog(filename)
   info = ""
   file = File.open(filename)
@@ -40,6 +42,7 @@ def readFileLog(filename)
   return info
 end
 
+#function that updates log file log.txt
 def updateLog(username,type)
   date = Time.now.strftime("%d-%m-%Y--%H:%M")
   filenamee="#{date}-#{username}"
@@ -49,6 +52,7 @@ def updateLog(username,type)
   file.close
 end
 
+#copy content of inputFile to outputFile
 def copyFileContents(inputFile, outputFile)
   inputFileHandler = File.open(inputFile, 'r')
   outputFileHandler = File.open(outputFile, 'w')
@@ -59,6 +63,7 @@ def copyFileContents(inputFile, outputFile)
   outputFileHandler.close
 end
 
+#add a backup
 def backupz(username)
     date = Time.now.strftime("%d-%m-%Y--%H:%M")
     name="#{date}-#{username}"
@@ -67,10 +72,11 @@ def backupz(username)
     copyFileContents('wiki.txt', filname)
 end
 
+#check if the connection is authorised
 def authorized?
   if $credentials != nil
     @Userz = User.where(:username => $credentials[0]).to_a.first
-    if @Userz
+    if @Userz 
       if @Userz.edit == true
         return true
       else
@@ -82,6 +88,7 @@ def authorized?
   end
 end
 
+#run if your function should be available for logged in users
 def protected!
   if authorized?
     return
@@ -89,6 +96,7 @@ def protected!
   redirect '/denied'
 end
 
+#protected! function restricted to admin-only access
 def protected_admin!
   if $credentials != nil && $credentials[0].to_s == 'Admin'
     return
@@ -163,6 +171,7 @@ get '/edit' do
   erb :edit
 end
 
+#edit wiki and save its content to backup
 put '/edit' do
   protected!
   info = "#{params[:message]}"
@@ -185,6 +194,7 @@ end
 get '/archive' do
   protected_admin!
   dirr = "backups"
+  #list files within directory omitting . and ..
   @list3 = Dir.entries(dirr) - %w[. ..]
   erb :archive
 end
@@ -217,6 +227,7 @@ get '/user/delete/:uzer' do
   end
 end
 
+#show content of a backup
 get '/showlogbackup/:logzbackup' do
     protected!
     info =""
@@ -230,6 +241,7 @@ get '/showlogbackup/:logzbackup' do
     erb :backup
 end
 
+#reset to a certain backup
 post '/resettoversion' do
   protected!
   versionname=params[:filename]
@@ -245,6 +257,7 @@ get '/resetwiki' do
   redirect '/archive'
 end
 
+#delete a backup
 post '/deleteversion' do
   protected!
   versionname=params[:filename]
@@ -258,6 +271,8 @@ get '/adminbackup' do
   backupz($credentials[0])
   redirect '/admincontrols'
 end
+
+#group of functions that change background
 get '/bluebackground' do
   $backgroundcolor="007996"
   redirect '/'
